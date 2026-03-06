@@ -1,0 +1,117 @@
+import React, { useState } from 'react';
+
+const Register = () => {
+  // 1. Data State (Capturing User Input)
+  const [user, setUser] = useState({ name: '', email: '', password: '' });
+  const [message, setMessage] = useState(''); // Feedback message
+
+  // 2. Theming & Stylistic Palette (From your video!)
+  const palette = {
+    primaryOrange: '#e67e22',  // The bold "Explore Collection" orange
+    deepBrown: '#3a2e23',     // The Header brown/black
+    softCream: '#fdfcf0',     // The "Promise" background
+    textDark: '#1d1d1f',      // Clean typography
+    bgLight: '#ffffff'
+  };
+
+  // 3. Functional Logic (Handle Input & Submission)
+  const handleChange = (e) => {
+    setUser({ ...user, [e.target.name]: e.target.value });
+  };
+
+  const handleRegister = async (e) => {
+    e.preventDefault();
+    setMessage('Connecting to the kitchen...'); // Visual feedback
+    
+    // Replace this with your actual MERN backend registration API
+    try {
+      const response = await fetch('http://localhost:5000/api/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(user),
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        setMessage('Welcome to the Desi Delight Family! 🧡');
+        setUser({ name: '', email: '', password: '' }); // Clear form
+      } else {
+        setMessage(data.error || 'Oops, the kitchen is full! Try again.');
+      }
+    } catch (err) {
+      setMessage('Failed to connect to the MERN kitchen.');
+    }
+  };
+
+  // 4. Stylesheet (Directly in React for easy mobile editing)
+  const styles = {
+    container: {
+      display: 'flex', justifyContent: 'center', alignItems: 'center',
+      minHeight: '80vh', padding: '20px', backgroundColor: palette.softCream,
+      fontFamily: "'Segoe UI', Roboto, sans-serif"
+    },
+    card: {
+      backgroundColor: palette.bgLight, padding: '40px', borderRadius: '15px',
+      boxShadow: '0 8px 30px rgba(0,0,0,0.1)', width: '100%', maxWidth: '400px',
+      textAlign: 'center'
+    },
+    header: {
+      fontSize: '2.4rem', fontWeight: '800', color: palette.deepBrown,
+      marginBottom: '10px', textTransform: 'uppercase', letterSpacing: '1px'
+    },
+    subHeader: {
+      fontSize: '1rem', color: '#777', marginBottom: '30px', fontWeight: '400'
+    },
+    form: { display: 'flex', flexDirection: 'column', gap: '15px' },
+    input: {
+      padding: '12px 15px', borderRadius: '8px', border: `1px solid #ddd`,
+      fontSize: '1rem', transition: 'border-color 0.2s ease', color: palette.textDark,
+      backgroundColor: '#f9f9f9'
+    },
+    // Adding visual effect when user focuses on input
+    inputFocus: { borderColor: palette.primaryOrange, outline: 'none' },
+    
+    button: {
+      backgroundColor: palette.primaryOrange, color: 'white', border: 'none',
+      padding: '15px', borderRadius: '8px', fontSize: '1.1rem', fontWeight: '600',
+      textTransform: 'uppercase', cursor: 'pointer', transition: 'all 0.2s ease',
+      letterSpacing: '1px', marginTop: '10px'
+    },
+    // Adding subtle interaction like the Instagram buttons
+    buttonHover: { transform: 'translateY(-2px)', boxShadow: '0 5px 15px rgba(230, 126, 34, 0.3)' },
+
+    linkRow: { marginTop: '20px', fontSize: '0.9rem', color: '#555' },
+    link: { color: palette.primaryOrange, textDecoration: 'none', fontWeight: '600', cursor: 'pointer' },
+    
+    status: { marginTop: '15px', padding: '10px', borderRadius: '5px', fontSize: '0.9rem', display: message ? 'block' : 'none', backgroundColor: '#e8f0fe', color: '#333' }
+  };
+
+  return (
+    <div style={styles.container}>
+      {/* Integrating the palette directly into the design */}
+      <div style={styles.card}>
+        <div style={styles.header}>DESI<span style={{color: palette.primaryOrange}}> DELIGHT</span></div>
+        <p style={styles.subHeader}>Join our family for pure, homemade happiness.</p>
+        
+        <form style={styles.form} onSubmit={handleRegister}>
+          <input name="name" type="text" placeholder="Your Full Name" value={user.name} onChange={handleChange} required style={styles.input} />
+          <input name="email" type="email" placeholder="Email Address" value={user.email} onChange={handleChange} required style={styles.input} />
+          <input name="password" type="password" placeholder="Choose a Password" value={user.password} onChange={handleChange} required style={styles.input} />
+          
+          <button type="submit" style={styles.button}>Create Account</button>
+        </div>
+
+        <div style={styles.linkRow}>
+          Already a member? <span style={styles.link}>Sign In</span>
+        </div>
+        
+        {/* Connection status area */}
+        <div style={styles.status}>
+          {message}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Register;
