@@ -18,10 +18,17 @@ function Navbar({ cartCount }) {
       <Link to="/" style={{ textDecoration: 'none', color: 'white' }}>
         <h2 style={{ margin: 0, cursor: 'pointer' }}>Desi Delight 🛍️</h2>
       </Link>
-      
       <div style={{ display: 'flex', gap: '25px', alignItems: 'center' }}>
         <Link to="/" style={linkStyle}>Home</Link>
-        <Link to="/products" style={linkStyle}>Products</Link>
+        <Link to="/products" style={linkStyle}>Products</Link> 
+        <Link to="/register" style={{ 
+          backgroundColor: '#e67e22', 
+          padding: '5px 15px', 
+          borderRadius: '5px', 
+          color: 'white', 
+          textDecoration: 'none' 
+        }}>
+        </Link>
         
         {/* CLICKABLE CART LINK */}
         <Link to="/cart" style={{ textDecoration: 'none' }}>
