@@ -32,7 +32,7 @@ function Home() {
           Authentic <span style={{ color: '#FFD700' }}>Desi</span> Flavors
         </h1>
         <p style={{ fontSize: '1.4rem', maxWidth: '700px', lineHeight: '1.6', marginBottom: '40px', fontWeight: '300' }}>
-          From grandmother's secret recipes to your modern dining table. 100% Pure. 100% Homemade.
+           100% Pure veg. 100% Homemade.
         </p>
         <button 
           onClick={() => navigate('/products')}
@@ -93,53 +93,18 @@ function Home() {
         </div>
       </div>
 
-      {/* 3. THE "TRUST & REVIEWS" SECTION */}
+      {/* 3. TRUST FOOTER SECTION (Updated to remove reviews) */}
       <div style={{ 
-        background: 'linear-gradient(135deg, #8B4513 0%, #a0522d 100%)', 
-        padding: '80px 20px', 
-        marginTop: '60px',
+        background: '#8B4513', 
+        padding: '40px 20px', 
         color: 'white',
         textAlign: 'center'
       }}>
-        <h2 style={{ fontSize: '2.5rem', marginBottom: '10px' }}>Join Our Happy Family</h2>
-        <p style={{ fontSize: '1.2rem', opacity: '0.9', marginBottom: '50px' }}>What our Desi Delight family is saying across India</p>
-
         <div style={{ 
-          display: 'flex', 
-          justifyContent: 'center', 
-          gap: '25px', 
-          flexWrap: 'wrap', 
-          maxWidth: '1200px', 
-          margin: '0 auto' 
-        }}>
-          
-          <div style={reviewCardStyle}>
-            <div style={{ color: '#FFD700', fontSize: '1.2rem', marginBottom: '10px' }}>⭐⭐⭐⭐⭐</div>
-            <p style={{ fontStyle: 'italic', color: '#444' }}>"The Mango Pickle tastes exactly like my Nani used to make. Truly authentic and nostalgic!"</p>
-            <h4 style={{ marginTop: '15px', color: '#8B4513' }}>— Priya S., Mumbai</h4>
-          </div>
-
-          <div style={reviewCardStyle}>
-            <div style={{ color: '#FFD700', fontSize: '1.2rem', marginBottom: '10px' }}>⭐⭐⭐⭐⭐</div>
-            <p style={{ fontStyle: 'italic', color: '#444' }}>"Finally found pure Cow Ghee that smells real. The packaging was safe and delivery was fast."</p>
-            <h4 style={{ marginTop: '15px', color: '#8B4513' }}>— Rajesh K., Delhi</h4>
-          </div>
-
-          <div style={reviewCardStyle}>
-            <div style={{ color: '#FFD700', fontSize: '1.2rem', marginBottom: '10px' }}>⭐⭐⭐⭐⭐</div>
-            <p style={{ fontStyle: 'italic', color: '#444' }}>"The Besan Ladoos melted in my mouth. My kids loved them. Thank you for keeping traditions alive!"</p>
-            <h4 style={{ marginTop: '15px', color: '#8B4513' }}>— Anjali M., Bangalore</h4>
-          </div>
-
-        </div>
-
-        {/* Trust Badges */}
-        <div style={{ 
-          marginTop: '60px', 
           display: 'flex', 
           justifyContent: 'center', 
           gap: '40px', 
-          opacity: '0.8',
+          opacity: '0.9',
           flexWrap: 'wrap'
         }}>
           <div style={{ fontWeight: 'bold' }}>✅ FSSAI Approved</div>
@@ -160,17 +125,6 @@ const premiumCardStyle = {
   boxShadow: '0 20px 40px rgba(139, 69, 19, 0.1)',
   border: '2px solid #fff5e6',
   transition: 'all 0.3s ease',
-};
-
-const reviewCardStyle = {
-  backgroundColor: 'rgba(255, 255, 255, 0.95)',
-  color: '#333',
-  padding: '30px',
-  borderRadius: '20px',
-  width: '300px',
-  textAlign: 'left',
-  boxShadow: '0 10px 20px rgba(0,0,0,0.2)',
-  borderTop: '5px solid #FFD700'
 };
 
 export default Home;
