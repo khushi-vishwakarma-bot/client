@@ -8,6 +8,7 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Register from './components/Register';
 import Login from './components/Log in'; 
+import Profile from './components/Profile'; // Import the new Profile component
 
 function App() {
   const [cartItems, setCartItems] = useState(() => {
@@ -15,7 +16,7 @@ function App() {
     return savedCart ? JSON.parse(savedCart) : [];
   });
 
-  // New: User State
+  // Persistent User State
   const [user, setUser] = useState(() => {
     const savedUser = localStorage.getItem('desiUser');
     return savedUser ? JSON.parse(savedUser) : null;
@@ -25,7 +26,6 @@ function App() {
     localStorage.setItem('desiCart', JSON.stringify(cartItems));
   }, [cartItems]);
 
-  // Persist user login
   useEffect(() => {
     localStorage.setItem('desiUser', JSON.stringify(user));
   }, [user]);
@@ -71,6 +71,7 @@ function App() {
           <Route path="/checkout" element={<Checkout cartItems={cartItems} clearCart={clearCart} />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login onLogin={loginUser} />} />
+          <Route path="/profile" element={<Profile user={user} onLogout={logoutUser} />} />
         </Routes>
         <Footer />
       </div>
