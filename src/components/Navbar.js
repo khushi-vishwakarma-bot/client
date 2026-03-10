@@ -18,8 +18,11 @@ function Navbar({ cartCount, user, onLogout }) {
         
         {user ? (
           <div style={profileWrapperStyle}>
-            <div style={avatarStyle}>{user.email.charAt(0).toUpperCase()}</div>
-            <span style={userEmailStyle}>{user.email.split('@')[0]}</span>
+            {/* Clickable Profile Section */}
+            <Link to="/profile" style={profileLinkStyle}>
+              <div style={avatarStyle}>{user.email.charAt(0).toUpperCase()}</div>
+              <span style={userEmailStyle}>{user.email.split('@')[0]}</span>
+            </Link>
             <button onClick={onLogout} style={logoutButtonStyle}>Logout</button>
           </div>
         ) : (
@@ -34,21 +37,51 @@ function Navbar({ cartCount, user, onLogout }) {
   );
 }
 
-const navStyle = { display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '15px 50px', backgroundColor: '#fff', boxShadow: '0 2px 10px rgba(0,0,0,0.1)', sticky: 'top', zIndex: 1000 };
+// STYLES
+const navStyle = { 
+  display: 'flex', justifyContent: 'space-between', alignItems: 'center', 
+  padding: '15px 50px', backgroundColor: '#fff', boxShadow: '0 2px 10px rgba(0,0,0,0.1)', 
+  position: 'sticky', top: 0, zIndex: 1000 
+};
+
 const logoStyle = { fontSize: '1.8rem', fontWeight: 'bold' };
 const linkContainerStyle = { display: 'flex', alignItems: 'center', gap: '20px' };
 const navLinkStyle = { textDecoration: 'none', color: '#333', fontWeight: '500' };
 
 const authButtonStyle = {
-  textDecoration: 'none', color: '#8B4513', fontWeight: '600', padding: '8px 20px', borderRadius: '5px', border: '2px solid #8B4513'
+  textDecoration: 'none', color: '#8B4513', fontWeight: '600', 
+  padding: '8px 20px', borderRadius: '5px', border: '2px solid #8B4513'
 };
 
-const profileWrapperStyle = { display: 'flex', alignItems: 'center', gap: '10px', backgroundColor: '#fdfcf0', padding: '5px 12px', borderRadius: '25px', border: '1px solid #ddd' };
-const avatarStyle = { width: '30px', height: '30px', backgroundColor: '#e67e22', color: 'white', borderRadius: '50%', display: 'flex', justifyContent: 'center', alignItems: 'center', fontWeight: 'bold' };
-const userEmailStyle = { fontSize: '0.9rem', color: '#333', fontWeight: '500' };
-const logoutButtonStyle = { background: 'none', border: 'none', color: '#d9534f', cursor: 'pointer', fontSize: '0.8rem', fontWeight: 'bold' };
+const profileWrapperStyle = { 
+  display: 'flex', alignItems: 'center', gap: '15px', 
+  backgroundColor: '#fdfcf0', padding: '5px 15px', 
+  borderRadius: '30px', border: '1px solid #ddd' 
+};
+
+const profileLinkStyle = {
+  display: 'flex', alignItems: 'center', gap: '10px', 
+  textDecoration: 'none', cursor: 'pointer'
+};
+
+const avatarStyle = { 
+  width: '32px', height: '32px', backgroundColor: '#e67e22', color: 'white', 
+  borderRadius: '50%', display: 'flex', justifyContent: 'center', 
+  alignItems: 'center', fontWeight: 'bold', fontSize: '0.9rem' 
+};
+
+const userEmailStyle = { fontSize: '0.9rem', color: '#333', fontWeight: '600' };
+
+const logoutButtonStyle = { 
+  background: 'none', border: 'none', color: '#d9534f', 
+  cursor: 'pointer', fontSize: '0.8rem', fontWeight: 'bold', padding: '0' 
+};
 
 const cartContainerStyle = { textDecoration: 'none', fontSize: '1.5rem', position: 'relative' };
-const badgeStyle = { position: 'absolute', top: '-5px', right: '-10px', backgroundColor: '#FFD700', color: '#8B4513', borderRadius: '50%', padding: '2px 6px', fontSize: '0.7rem', fontWeight: 'bold' };
+const badgeStyle = { 
+  position: 'absolute', top: '-5px', right: '-10px', backgroundColor: '#FFD700', 
+  color: '#8B4513', borderRadius: '50%', padding: '2px 6px', 
+  fontSize: '0.7rem', fontWeight: 'bold' 
+};
 
 export default Navbar;
