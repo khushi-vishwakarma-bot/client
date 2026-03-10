@@ -8,7 +8,7 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Register from './components/Register';
 import Login from './components/Log in'; 
-import Profile from './components/Profile'; // Import the new Profile component
+import Profile from './components/Profile';
 
 function App() {
   const [cartItems, setCartItems] = useState(() => {
@@ -16,7 +16,6 @@ function App() {
     return savedCart ? JSON.parse(savedCart) : [];
   });
 
-  // Persistent User State
   const [user, setUser] = useState(() => {
     const savedUser = localStorage.getItem('desiUser');
     return savedUser ? JSON.parse(savedUser) : null;
@@ -42,37 +41,29 @@ function App() {
     });
   };
 
-  const updateQuantity = (id, amount) => {
-    setCartItems((prevItems) =>
-      prevItems
-        .map((item) =>
-          item.id === id ? { ...item, quantity: item.quantity + amount } : item
-        )
-        .filter((item) => item.quantity > 0)
-    );
-  };
-
   const loginUser = (userData) => setUser(userData);
   const logoutUser = () => setUser(null);
-  const clearCart = () => setCartItems([]);
 
   return (
     <Router>
       <div className="App">
+        {/* Navbar is now safely inside Router */}
         <Navbar 
           user={user} 
           onLogout={logoutUser} 
           cartCount={cartItems.reduce((acc, item) => acc + item.quantity, 0)} 
         />
+        
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/products" element={<Products addToCart={addToCart} />} />
-          <Route path="/cart" element={<Cart cartItems={cartItems} updateQuantity={updateQuantity} />} />
-          <Route path="/checkout" element={<Checkout cartItems={cartItems} clearCart={clearCart} />} />
+          <Route path="/cart" element={<Cart cartItems={cartItems} />} />
+          <Route path="/checkout" element={<Checkout cartItems={cartItems} />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login onLogin={loginUser} />} />
           <Route path="/profile" element={<Profile user={user} onLogout={logoutUser} />} />
         </Routes>
+        
         <Footer />
       </div>
     </Router>

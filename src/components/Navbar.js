@@ -18,7 +18,6 @@ function Navbar({ cartCount, user, onLogout }) {
         
         {user ? (
           <div style={profileWrapperStyle}>
-            {/* Clickable Profile Section */}
             <Link to="/profile" style={profileLinkStyle}>
               <div style={avatarStyle}>{user.email.charAt(0).toUpperCase()}</div>
               <span style={userEmailStyle}>{user.email.split('@')[0]}</span>
@@ -37,11 +36,16 @@ function Navbar({ cartCount, user, onLogout }) {
   );
 }
 
-// STYLES
 const navStyle = { 
-  display: 'flex', justifyContent: 'space-between', alignItems: 'center', 
-  padding: '15px 50px', backgroundColor: '#fff', boxShadow: '0 2px 10px rgba(0,0,0,0.1)', 
-  position: 'sticky', top: 0, zIndex: 1000 
+  display: 'flex', 
+  justifyContent: 'space-between', 
+  alignItems: 'center', 
+  padding: '15px 50px', 
+  backgroundColor: '#fff', 
+  boxShadow: '0 2px 10px rgba(0,0,0,0.1)', 
+  position: 'sticky', // Locks the bar
+  top: 0, 
+  zIndex: 1000 
 };
 
 const logoStyle = { fontSize: '1.8rem', fontWeight: 'bold' };
@@ -59,10 +63,7 @@ const profileWrapperStyle = {
   borderRadius: '30px', border: '1px solid #ddd' 
 };
 
-const profileLinkStyle = {
-  display: 'flex', alignItems: 'center', gap: '10px', 
-  textDecoration: 'none', cursor: 'pointer'
-};
+const profileLinkStyle = { display: 'flex', alignItems: 'center', gap: '10px', textDecoration: 'none' };
 
 const avatarStyle = { 
   width: '32px', height: '32px', backgroundColor: '#e67e22', color: 'white', 
@@ -71,17 +72,12 @@ const avatarStyle = {
 };
 
 const userEmailStyle = { fontSize: '0.9rem', color: '#333', fontWeight: '600' };
-
-const logoutButtonStyle = { 
-  background: 'none', border: 'none', color: '#d9534f', 
-  cursor: 'pointer', fontSize: '0.8rem', fontWeight: 'bold', padding: '0' 
-};
+const logoutButtonStyle = { background: 'none', border: 'none', color: '#d9534f', cursor: 'pointer', fontWeight: 'bold' };
 
 const cartContainerStyle = { textDecoration: 'none', fontSize: '1.5rem', position: 'relative' };
 const badgeStyle = { 
   position: 'absolute', top: '-5px', right: '-10px', backgroundColor: '#FFD700', 
-  color: '#8B4513', borderRadius: '50%', padding: '2px 6px', 
-  fontSize: '0.7rem', fontWeight: 'bold' 
+  color: '#8B4513', borderRadius: '50%', padding: '2px 6px', fontSize: '0.7rem', fontWeight: 'bold' 
 };
 
 export default Navbar;
