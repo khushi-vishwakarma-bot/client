@@ -36,18 +36,7 @@ function Home() {
         </p>
         <button 
           onClick={() => navigate('/products')}
-          style={{
-            padding: '18px 50px',
-            fontSize: '1.2rem',
-            backgroundColor: '#FFD700',
-            color: '#8B4513',
-            border: 'none',
-            borderRadius: '50px',
-            fontWeight: '900',
-            cursor: 'pointer',
-            boxShadow: '0 10px 20px rgba(0,0,0,0.3)',
-            transition: 'all 0.3s ease'
-          }}
+          style={ctaButtonStyle}
           onMouseEnter={(e) => {
             e.target.style.transform = 'translateY(-5px)';
             e.target.style.boxShadow = '0 15px 30px rgba(255, 215, 0, 0.4)';
@@ -61,18 +50,38 @@ function Home() {
         </button>
       </div>
 
-      {/* 2. OUR PROMISE SECTION */}
-      <div style={{ padding: '80px 20px', textAlign: 'center' }}>
+      {/* 2. CIRCULAR CATEGORIES SECTION (Moved Up) */}
+      <div style={{ padding: '80px 20px', backgroundColor: '#fffaf0' }}>
+        <h2 style={{ textAlign: 'center', color: '#8B4513', fontSize: '2.5rem', marginBottom: '60px', fontWeight: 'bold' }}>SHOP BY CATEGORY</h2>
+        <div style={flexContainerStyle}>
+          
+          {[
+            { name: 'Pickles', cat: 'pickles', img: 'https://twobrothersindiashop.com/cdn/shop/articles/Untitled_design_2_c2613306-8bfa-4ef6-aa96-1f9bf7d4c715.png?v=1694174770&width=1024' },
+            { name: 'Sweets', cat: 'sweets', img: 'https://cdn.pixabay.com/photo/2017/08/10/18/14/indian-sweets-2625911_640.jpg' },
+            { name: 'Spices', cat: 'spices', img: 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=400&auto=format' },
+            { name: 'Snacks', cat: 'snacks', img: 'https://www.tastingtable.com/img/gallery/20-indian-snacks-you-absolutely-must-try/intro-1744722583.jpg' },
+            { name: 'Essentials', cat: 'essentials', img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTVS9kTFxhoB_aNxPM55KLZwbUdwTqeOxrO9g&s' }
+          ].map((item, index) => (
+            <div key={index} style={{ textAlign: 'center' }}>
+              <div style={{ ...circleWrapperStyle, backgroundImage: `url(${item.img})` }}>
+                <button 
+                  onClick={() => navigate(`/products?cat=${item.cat}`)}
+                  style={shopButtonStyle}
+                >
+                  SHOP {item.name.toUpperCase()}
+                </button>
+              </div>
+            </div>
+          ))}
+
+        </div>
+      </div>
+
+      {/* 3. OUR PROMISE SECTION (Moved Down) */}
+      <div style={{ padding: '80px 20px', textAlign: 'center', backgroundColor: '#fdf5e6' }}>
         <h2 style={{ color: '#8B4513', fontSize: '2.5rem', marginBottom: '50px' }}>Our Promise to You</h2>
         
-        <div style={{ 
-          display: 'flex', 
-          justifyContent: 'center', 
-          gap: '40px', 
-          flexWrap: 'wrap',
-          maxWidth: '1200px',
-          margin: '0 auto' 
-        }}>
+        <div style={flexContainerStyle}>
           <div style={premiumCardStyle}>
             <div style={{ fontSize: '4rem' }}>🍯</div>
             <h3 style={{ color: '#8B4513' }}>Pure Ghee Based</h3>
@@ -93,10 +102,10 @@ function Home() {
         </div>
       </div>
 
-      {/* 3. TRUST FOOTER SECTION (Updated to remove reviews) */}
+      {/* 4. TRUST FOOTER SECTION */}
       <div style={{ 
-        background: '#8B4513', 
-        padding: '40px 20px', 
+        background: '#482c18', 
+        padding: '30px 20px', 
         color: 'white',
         textAlign: 'center'
       }}>
@@ -104,27 +113,79 @@ function Home() {
           display: 'flex', 
           justifyContent: 'center', 
           gap: '40px', 
-          opacity: '0.9',
-          flexWrap: 'wrap'
+          flexWrap: 'wrap',
+          marginBottom: '15px'
         }}>
-          <div style={{ fontWeight: 'bold' }}>✅ FSSAI Approved</div>
-          <div style={{ fontWeight: 'bold' }}>💳 Secure Payment</div>
-          <div style={{ fontWeight: 'bold' }}>📦 Eco-friendly Packing</div>
+          <div style={{ fontWeight: 'bold', fontSize: '1rem' }}>✅ FSSAI Approved</div>
+          <div style={{ fontWeight: 'bold', fontSize: '1rem' }}>💳 Secure Payment</div>
+          <div style={{ fontWeight: 'bold', fontSize: '1rem' }}>📦 Eco-friendly Packing</div>
         </div>
+        <p style={{ opacity: '0.8', fontSize: '0.85rem', margin: 0 }}>
+          Copyright © Desi Delight. All Into in India.
+        </p>
       </div>
     </div>
   );
 }
 
 // STYLES
+const flexContainerStyle = {
+  display: 'flex', 
+  justifyContent: 'center', 
+  gap: '30px', 
+  flexWrap: 'wrap',
+  maxWidth: '1400px',
+  margin: '0 auto' 
+};
+
+const ctaButtonStyle = {
+  padding: '18px 50px',
+  fontSize: '1.2rem',
+  backgroundColor: '#FFD700',
+  color: '#8B4513',
+  border: 'none',
+  borderRadius: '50px',
+  fontWeight: '900',
+  cursor: 'pointer',
+  boxShadow: '0 10px 20px rgba(0,0,0,0.3)',
+  transition: 'all 0.3s ease'
+};
+
 const premiumCardStyle = {
   backgroundColor: '#ffffff',
   padding: '40px 30px',
-  borderRadius: '30px',
-  width: '320px',
-  boxShadow: '0 20px 40px rgba(139, 69, 19, 0.1)',
-  border: '2px solid #fff5e6',
-  transition: 'all 0.3s ease',
+  borderRadius: '20px',
+  width: '300px',
+  boxShadow: '0 10px 30px rgba(0,0,0,0.05)',
+  border: '1px solid #eee',
+};
+
+const circleWrapperStyle = {
+  width: '240px',
+  height: '240px',
+  borderRadius: '50%',
+  backgroundSize: 'cover',
+  backgroundPosition: 'center',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  boxShadow: '0 15px 35px rgba(0,0,0,0.15)',
+  border: '6px solid white',
+  position: 'relative',
+  overflow: 'hidden'
+};
+
+const shopButtonStyle = {
+  backgroundColor: 'rgba(255, 255, 255, 0.95)',
+  color: '#333',
+  border: 'none',
+  padding: '10px 20px',
+  borderRadius: '25px',
+  fontSize: '0.75rem',
+  fontWeight: 'bold',
+  cursor: 'pointer',
+  boxShadow: '0 4px 10px rgba(0,0,0,0.2)',
+  transition: 'all 0.3s ease'
 };
 
 export default Home;
