@@ -121,7 +121,7 @@ function Home() {
           <div style={{ fontWeight: 'bold', fontSize: '1rem' }}>📦 Eco-friendly Packing</div>
         </div>
         <p style={{ opacity: '0.8', fontSize: '0.85rem', margin: 0 }}>
-          Copyright © Desi Delight. All Into in India.
+        
         </p>
       </div>
     </div>

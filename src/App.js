@@ -3,27 +3,36 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './components/Home';
 import Products from './components/Products';
 import Cart from './components/Cart';
-import Checkout from './components/Checkout'; // 1. Added Checkout Import
+import Checkout from './components/Checkout'; 
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
+import Register from './components/Register';
+import Login from './components/Log in'; 
 
 function App() {
-  // Initialize state by checking LocalStorage first
   const [cartItems, setCartItems] = useState(() => {
     const savedCart = localStorage.getItem('desiCart');
     return savedCart ? JSON.parse(savedCart) : [];
   });
 
-  // Automatically save to LocalStorage whenever cartItems changes
+  // New: User State
+  const [user, setUser] = useState(() => {
+    const savedUser = localStorage.getItem('desiUser');
+    return savedUser ? JSON.parse(savedUser) : null;
+  });
+
   useEffect(() => {
     localStorage.setItem('desiCart', JSON.stringify(cartItems));
   }, [cartItems]);
 
-  // Updated Add to Cart: Handles quantity logic
+  // Persist user login
+  useEffect(() => {
+    localStorage.setItem('desiUser', JSON.stringify(user));
+  }, [user]);
+
   const addToCart = (product) => {
     setCartItems((prevItems) => {
       const isItemInCart = prevItems.find((item) => item.id === product.id);
-
       if (isItemInCart) {
         return prevItems.map((item) =>
           item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
@@ -33,7 +42,6 @@ function App() {
     });
   };
 
-  // Updates quantity (+ or -) and removes item if qty is 0
   const updateQuantity = (id, amount) => {
     setCartItems((prevItems) =>
       prevItems
@@ -44,33 +52,26 @@ function App() {
     );
   };
 
-  // 2. New Function: To clear the cart after a successful order
-  const clearCart = () => {
-    setCartItems([]);
-  };
+  const loginUser = (userData) => setUser(userData);
+  const logoutUser = () => setUser(null);
+  const clearCart = () => setCartItems([]);
 
   return (
     <Router>
       <div className="App">
-        {/* Total count now sums up all quantities */}
-        <Navbar cartCount={cartItems.reduce((acc, item) => acc + item.quantity, 0)} />
-        
+        <Navbar 
+          user={user} 
+          onLogout={logoutUser} 
+          cartCount={cartItems.reduce((acc, item) => acc + item.quantity, 0)} 
+        />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/products" element={<Products addToCart={addToCart} />} />
-          
-          <Route 
-            path="/cart" 
-            element={<Cart cartItems={cartItems} updateQuantity={updateQuantity} />} 
-          />
-
-          {/* 3. Added the Checkout Route */}
-          <Route 
-            path="/checkout" 
-            element={<Checkout cartItems={cartItems} clearCart={clearCart} />} 
-          />
+          <Route path="/cart" element={<Cart cartItems={cartItems} updateQuantity={updateQuantity} />} />
+          <Route path="/checkout" element={<Checkout cartItems={cartItems} clearCart={clearCart} />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/login" element={<Login onLogin={loginUser} />} />
         </Routes>
-        
         <Footer />
       </div>
     </Router>
