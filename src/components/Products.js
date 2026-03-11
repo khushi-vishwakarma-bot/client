@@ -1,8 +1,26 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 
 function Products({ addToCart }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
+  
+  // Access the URL location to check for category parameters
+  const location = useLocation();
+
+  // Listen for changes in the URL (e.g., when coming from Home.js categories)
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const catParam = params.get('cat'); // Matches the 'cat' key used in Home.js
+    
+    if (catParam) {
+      setSelectedCategory(catParam);
+    } else {
+      setSelectedCategory("All");
+    }
+    // Scroll to top when the category changes
+    window.scrollTo(0, 0);
+  }, [location]);
 
   const productList = [
     { 
@@ -116,6 +134,7 @@ function Products({ addToCart }) {
       <div style={{ textAlign: 'center', margin: '20px' }}>
         <input 
           placeholder="Search for something delicious..." 
+          value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           style={{ 
             padding: '12px 25px', 
@@ -158,79 +177,79 @@ function Products({ addToCart }) {
         gap: '30px',
         padding: '10px' 
       }}>
-        {filtered.map(product => (
-          <div key={product.id} className="product-card" style={{ 
-            border: '1px solid #eee', 
-            padding: '20px', 
-            borderRadius: '20px', 
-            textAlign: 'left',
-            backgroundColor: 'white',
-            boxShadow: '0 6px 12px rgba(0,0,0,0.08)',
-            transition: 'all 0.3s ease',
-            display: 'flex',
-            flexDirection: 'column'
-          }}>
-            <img 
-              src={product.img} 
-              alt={product.name} 
-              style={{ width: '100%', height: '200px', objectFit: 'cover', borderRadius: '15px' }} 
-            />
-            <h4 style={{ margin: '15px 0 5px', color: '#333', fontSize: '1.2rem' }}>{product.name}</h4>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <p style={{ color: '#666', fontSize: '0.9rem', margin: 0 }}>{product.category}</p>
-              <p style={{ color: '#8B4513', fontWeight: 'bold', fontSize: '1.2rem', margin: 0 }}>{product.price}</p>
-            </div>
-
-            {/* PRODUCT DETAILS BOX */}
-            <div style={{ 
-              backgroundColor: '#fff9f0', 
-              padding: '10px', 
-              borderRadius: '10px', 
-              marginTop: '15px',
-              fontSize: '0.85rem',
-              borderLeft: '4px solid #FFD700'
+        {filtered.length > 0 ? (
+          filtered.map(product => (
+            <div key={product.id} className="product-card" style={{ 
+              border: '1px solid #eee', 
+              padding: '20px', 
+              borderRadius: '20px', 
+              textAlign: 'left',
+              backgroundColor: 'white',
+              boxShadow: '0 6px 12px rgba(0,0,0,0.08)',
+              transition: 'all 0.3s ease',
+              display: 'flex',
+              flexDirection: 'column'
             }}>
-              <p style={{ margin: '2px 0' }}><strong>🌿 Ingredients:</strong> {product.ingredients}</p>
-              <p style={{ margin: '2px 0' }}><strong>⏳ Shelf-life:</strong> {product.shelfLife}</p>
-              <p style={{ margin: '2px 0' }}><strong>📦 Storage:</strong> {product.storage}</p>
-            </div>
-            
-            <button 
-              onClick={() => addToCart(product)} 
-              style={{ 
-                backgroundColor: '#8B4513', 
-                color: 'white', 
-                border: 'none', 
-                padding: '12px 25px', 
-                borderRadius: '10px',
-                cursor: 'pointer',
-                fontWeight: 'bold',
+              <img 
+                src={product.img} 
+                alt={product.name} 
+                style={{ width: '100%', height: '200px', objectFit: 'cover', borderRadius: '15px' }} 
+              />
+              <h4 style={{ margin: '15px 0 5px', color: '#333', fontSize: '1.2rem' }}>{product.name}</h4>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <p style={{ color: '#666', fontSize: '0.9rem', margin: 0 }}>{product.category}</p>
+                <p style={{ color: '#8B4513', fontWeight: 'bold', fontSize: '1.2rem', margin: 0 }}>{product.price}</p>
+              </div>
+
+              {/* PRODUCT DETAILS BOX */}
+              <div style={{ 
+                backgroundColor: '#fff9f0', 
+                padding: '10px', 
+                borderRadius: '10px', 
                 marginTop: '15px',
-                width: '100%',
-                transition: 'all 0.2s ease',
-                boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
-              }}
-              onMouseEnter={(e) => {
-                e.target.style.backgroundColor = '#fecc02'; 
-                e.target.style.color = '#8B4513'; 
-                e.target.style.transform = 'translateY(-2px)'; 
-              }}
-              onMouseLeave={(e) => {
-                e.target.style.backgroundColor = '#8B4513'; 
-                e.target.style.color = 'white';
-                e.target.style.transform = 'translateY(0)';
-              }}
-              onMouseDown={(e) => {
-                e.target.style.transform = 'scale(0.95)'; 
-              }}
-              onMouseUp={(e) => {
-                e.target.style.transform = 'scale(1)';
-              }}
-            >
-              Add to Cart
-            </button>
+                fontSize: '0.85rem',
+                borderLeft: '4px solid #FFD700'
+              }}>
+                <p style={{ margin: '2px 0' }}><strong>🌿 Ingredients:</strong> {product.ingredients}</p>
+                <p style={{ margin: '2px 0' }}><strong>⏳ Shelf-life:</strong> {product.shelfLife}</p>
+                <p style={{ margin: '2px 0' }}><strong>📦 Storage:</strong> {product.storage}</p>
+              </div>
+              
+              <button 
+                onClick={() => addToCart(product)} 
+                style={{ 
+                  backgroundColor: '#8B4513', 
+                  color: 'white', 
+                  border: 'none', 
+                  padding: '12px 25px', 
+                  borderRadius: '10px',
+                  cursor: 'pointer',
+                  fontWeight: 'bold',
+                  marginTop: '15px',
+                  width: '100%',
+                  transition: 'all 0.2s ease',
+                  boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
+                }}
+                onMouseEnter={(e) => {
+                  e.target.style.backgroundColor = '#fecc02'; 
+                  e.target.style.color = '#8B4513'; 
+                  e.target.style.transform = 'translateY(-2px)'; 
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.backgroundColor = '#8B4513'; 
+                  e.target.style.color = 'white';
+                  e.target.style.transform = 'translateY(0)';
+                }}
+              >
+                Add to Cart
+              </button>
+            </div>
+          ))
+        ) : (
+          <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '50px', color: '#8B4513' }}>
+            <h3>No products found in this category.</h3>
           </div>
-        ))}
+        )}
       </div>
     </div>
   );

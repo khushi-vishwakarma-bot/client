@@ -4,6 +4,7 @@ import Home from './components/Home';
 import Products from './components/Products';
 import Cart from './components/Cart';
 import Checkout from './components/Checkout'; 
+import OrderSuccess from './components/OrderSuccess'; 
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Register from './components/Register';
@@ -41,29 +42,52 @@ function App() {
     });
   };
 
+  // UPDATED: Logic to remove item when quantity drops below 1
+  const updateQuantity = (productId, amount) => {
+    setCartItems((prevItems) => {
+      return prevItems
+        .map((item) =>
+          item.id === productId ? { ...item, quantity: item.quantity + amount } : item
+        )
+        .filter((item) => item.quantity > 0); // This automatically removes the product
+    });
+  };
+
+  const clearCart = () => {
+    setCartItems([]);
+    localStorage.removeItem('desiCart');
+  };
+
   const loginUser = (userData) => setUser(userData);
-  const logoutUser = () => setUser(null);
+  const logoutUser = () => {
+    setUser(null);
+    localStorage.removeItem('desiUser');
+  };
 
   return (
     <Router>
-      <div className="App">
-        {/* Navbar is now safely inside Router */}
+      <div className="App" style={{ fontFamily: "'Poppins', sans-serif" }}>
         <Navbar 
           user={user} 
           onLogout={logoutUser} 
           cartCount={cartItems.reduce((acc, item) => acc + item.quantity, 0)} 
         />
-        
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/products" element={<Products addToCart={addToCart} />} />
-          <Route path="/cart" element={<Cart cartItems={cartItems} />} />
-          <Route path="/checkout" element={<Checkout cartItems={cartItems} />} />
+          <Route 
+            path="/cart" 
+            element={<Cart cartItems={cartItems} updateQuantity={updateQuantity} />} 
+          />
+          <Route 
+            path="/checkout" 
+            element={<Checkout cartItems={cartItems} clearCart={clearCart} />} 
+          />
+          <Route path="/order-success" element={<OrderSuccess />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login onLogin={loginUser} />} />
           <Route path="/profile" element={<Profile user={user} onLogout={logoutUser} />} />
         </Routes>
-        
         <Footer />
       </div>
     </Router>

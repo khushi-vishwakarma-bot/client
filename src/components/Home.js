@@ -50,21 +50,26 @@ function Home() {
         </button>
       </div>
 
-      {/* 2. CIRCULAR CATEGORIES SECTION (Moved Up) */}
+      {/* 2. CIRCULAR CATEGORIES SECTION */}
       <div style={{ padding: '80px 20px', backgroundColor: '#fffaf0' }}>
         <h2 style={{ textAlign: 'center', color: '#8B4513', fontSize: '2.5rem', marginBottom: '60px', fontWeight: 'bold' }}>SHOP BY CATEGORY</h2>
         <div style={flexContainerStyle}>
           
           {[
-            { name: 'Pickles', cat: 'pickles', img: 'https://twobrothersindiashop.com/cdn/shop/articles/Untitled_design_2_c2613306-8bfa-4ef6-aa96-1f9bf7d4c715.png?v=1694174770&width=1024' },
-            { name: 'Sweets', cat: 'sweets', img: 'https://cdn.pixabay.com/photo/2017/08/10/18/14/indian-sweets-2625911_640.jpg' },
-            { name: 'Spices', cat: 'spices', img: 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=400&auto=format' },
-            { name: 'Snacks', cat: 'snacks', img: 'https://www.tastingtable.com/img/gallery/20-indian-snacks-you-absolutely-must-try/intro-1744722583.jpg' },
-            { name: 'Essentials', cat: 'essentials', img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTVS9kTFxhoB_aNxPM55KLZwbUdwTqeOxrO9g&s' }
+            { name: 'Pickles', cat: 'Pickles', img: 'https://twobrothersindiashop.com/cdn/shop/articles/Untitled_design_2_c2613306-8bfa-4ef6-aa96-1f9bf7d4c715.png?v=1694174770&width=1024' },
+            { name: 'Sweets', cat: 'Sweets', img: 'https://cdn.pixabay.com/photo/2017/08/10/18/14/indian-sweets-2625911_640.jpg' },
+            { name: 'Spices', cat: 'Spices', img: 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=400&auto=format' },
+            { name: 'Snacks', cat: 'Snacks', img: 'https://www.tastingtable.com/img/gallery/20-indian-snacks-you-absolutely-must-try/intro-1744722583.jpg' },
+            { name: 'Essentials', cat: 'Essentials', img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTVS9kTFxhoB_aNxPM55KLZwbUdwTqeOxrO9g&s' }
           ].map((item, index) => (
             <div key={index} style={{ textAlign: 'center' }}>
-              <div style={{ ...circleWrapperStyle, backgroundImage: `url(${item.img})` }}>
+              <div 
+                style={{ ...circleWrapperStyle, backgroundImage: `url(${item.img})` }}
+                onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
+                onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
+              >
                 <button 
+                  // Clicking this will now navigate to Products and trigger the filter
                   onClick={() => navigate(`/products?cat=${item.cat}`)}
                   style={shopButtonStyle}
                 >
@@ -77,7 +82,7 @@ function Home() {
         </div>
       </div>
 
-      {/* 3. OUR PROMISE SECTION (Moved Down) */}
+      {/* 3. OUR PROMISE SECTION */}
       <div style={{ padding: '80px 20px', textAlign: 'center', backgroundColor: '#fdf5e6' }}>
         <h2 style={{ color: '#8B4513', fontSize: '2.5rem', marginBottom: '50px' }}>Our Promise to You</h2>
         
@@ -120,9 +125,6 @@ function Home() {
           <div style={{ fontWeight: 'bold', fontSize: '1rem' }}>💳 Secure Payment</div>
           <div style={{ fontWeight: 'bold', fontSize: '1rem' }}>📦 Eco-friendly Packing</div>
         </div>
-        <p style={{ opacity: '0.8', fontSize: '0.85rem', margin: 0 }}>
-        
-        </p>
       </div>
     </div>
   );
@@ -172,7 +174,8 @@ const circleWrapperStyle = {
   boxShadow: '0 15px 35px rgba(0,0,0,0.15)',
   border: '6px solid white',
   position: 'relative',
-  overflow: 'hidden'
+  overflow: 'hidden',
+  transition: 'transform 0.3s ease' // Added for smooth hover
 };
 
 const shopButtonStyle = {
