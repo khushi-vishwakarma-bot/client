@@ -5,8 +5,19 @@ function Home() {
   const navigate = useNavigate();
 
   return (
-    <div style={{ backgroundColor: '#fffaf0', minHeight: '100vh', fontFamily: "'Poppins', sans-serif" }}>
+    <div style={{ backgroundColor: '#fffaf0', minHeight: '100vh', fontFamily: "'Poppins', sans-serif", position: 'relative' }}>
       
+      {/* CSS Animation for the Floating Badge */}
+      <style>
+        {`
+          @keyframes pulse-gold {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.7); }
+            70% { transform: scale(1.05); box-shadow: 0 0 0 15px rgba(255, 215, 0, 0); }
+            100% { transform: scale(1); }
+          }
+        `}
+      </style>
+
       {/* 1. LUXURY HERO SECTION */}
       <div style={{
         height: '80vh',
@@ -50,6 +61,7 @@ function Home() {
         </button>
       </div>
 
+<<<<<<< HEAD
       {/* 2. CIRCULAR CATEGORIES SECTION */}
       <div style={{ padding: '80px 20px', backgroundColor: '#fffaf0' }}>
         <h2 style={{ textAlign: 'center', color: '#8B4513', fontSize: '2.5rem', marginBottom: '60px', fontWeight: 'bold' }}>SHOP BY CATEGORY</h2>
@@ -126,6 +138,38 @@ function Home() {
           <div style={{ fontWeight: 'bold', fontSize: '1rem' }}>📦 Eco-friendly Packing</div>
         </div>
       </div>
+=======
+      {/* FLOATING DISCOUNT BADGE */}
+      <div 
+        onClick={() => navigate('/promo')}
+        style={{
+          position: 'fixed',
+          bottom: '30px',
+          right: '30px',
+          backgroundColor: '#FFD700',
+          color: '#8B4513',
+          width: '100px',
+          height: '100px',
+          borderRadius: '50%',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+          cursor: 'pointer',
+          zIndex: 1000,
+          textAlign: 'center',
+          fontWeight: 'bold',
+          fontSize: '0.9rem',
+          boxShadow: '0 10px 25px rgba(0,0,0,0.2)',
+          animation: 'pulse-gold 2s infinite',
+          border: '2px solid #8B4513'
+        }}
+      >
+        <span style={{ fontSize: '1.2rem' }}>50%</span>
+        <span>OFF</span>
+      </div>
+
+>>>>>>> d6c1a92 (Tabish new work promopt for discount added)
     </div>
   );
 }

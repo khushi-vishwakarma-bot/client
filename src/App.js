@@ -10,7 +10,7 @@ import Footer from './components/Footer';
 import Register from './components/Register';
 import Login from './components/Log in'; 
 import Profile from './components/Profile';
-
+import PromoTicket from './components/PromoTicket';
 function App() {
   const [cartItems, setCartItems] = useState(() => {
     const savedCart = localStorage.getItem('desiCart');
@@ -65,6 +65,7 @@ function App() {
   };
 
   return (
+<<<<<<< HEAD
     <Router>
       <div className="App" style={{ fontFamily: "'Poppins', sans-serif" }}>
         <Navbar 
@@ -72,6 +73,15 @@ function App() {
           onLogout={logoutUser} 
           cartCount={cartItems.reduce((acc, item) => acc + item.quantity, 0)} 
         />
+=======
+  <Router>
+    <div className="App">
+      <PromoTicket /> {/* <--- ADD THIS LINE HERE */}
+    
+        {/* Total count now sums up all quantities */}
+        <Navbar cartCount={cartItems.reduce((acc, item) => acc + item.quantity, 0)} />
+        
+>>>>>>> d6c1a92 (Tabish new work promopt for discount added)
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/products" element={<Products addToCart={addToCart} />} />
@@ -79,6 +89,7 @@ function App() {
             path="/cart" 
             element={<Cart cartItems={cartItems} updateQuantity={updateQuantity} />} 
           />
+<<<<<<< HEAD
           <Route 
             path="/checkout" 
             element={<Checkout cartItems={cartItems} clearCart={clearCart} />} 
@@ -87,6 +98,16 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login onLogin={loginUser} />} />
           <Route path="/profile" element={<Profile user={user} onLogout={logoutUser} />} />
+=======
+
+          {/* 3. Added the Checkout Route */}
+           <Route 
+            path="/checkout" 
+            element={<Checkout cartItems={cartItems} clearCart={clearCart}/>} /> 
+            <Route 
+            path="/register" element={<Register />} /> 
+            <Route path="/login" element={<Login />} />
+>>>>>>> d6c1a92 (Tabish new work promopt for discount added)
         </Routes>
         <Footer />
       </div>

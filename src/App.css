@@ -36,3 +36,52 @@
     transform: rotate(360deg);
   }
 }
+/* Floating Badge */
+.discount-badge {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #ff4757;
+  color: white;
+  padding: 15px;
+  border-radius: 50%;
+  cursor: pointer;
+  animation: pulse 2s infinite;
+  z-index: 1000;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 71, 87, 0.7); }
+  70% { transform: scale(1.1); box-shadow: 0 0 0 10px rgba(255, 71, 87, 0); }
+  100% { transform: scale(1); }
+}
+
+/* Printer Logic */
+.printer-box {
+  position: relative;
+  width: 300px;
+  margin: 0 auto;
+}
+
+.ticket {
+  width: 200px;
+  background: #f1f1f1;
+  border: 2px dashed #333;
+  margin: 0 auto;
+  position: absolute;
+  top: 40px; /* Adjust based on your printer image slot */
+  left: 50px;
+  z-index: -1;
+  transform: translateY(0);
+  opacity: 0;
+}
+
+.print-animation {
+  animation: emerge 3s forwards;
+}
+
+@keyframes emerge {
+  0% { transform: translateY(0); opacity: 1; }
+  100% { transform: translateY(100px); opacity: 1; }
+}
+
