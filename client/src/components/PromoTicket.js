@@ -7,54 +7,81 @@ const PromoTicket = () => {
   const [isEligible, setIsEligible] = useState(false);
 
   useEffect(() => {
+    // Check for existing promo timer in local storage
     const startTime = localStorage.getItem('promo_start_time');
-    if (!startTime) { setIsEligible(false); return; }
+    if (!startTime) { 
+      setIsEligible(false); 
+      return; 
+    }
     setIsEligible(true);
 
     const timer = setInterval(() => {
       const now = new Date().getTime();
-      const expiration = parseInt(startTime) + 24 * 60 * 60 * 1000;
+      const expiration = parseInt(startTime) + 24 * 60 * 60 * 1000; // 24-hour window
       const distance = expiration - now;
+
       if (distance < 0) {
         setTimeLeft("EXPIRED");
         localStorage.removeItem('promo_start_time'); 
+        setIsEligible(false);
         clearInterval(timer);
       } else {
-        const h = Math.floor((distance / (1000 * 60 * 60)));
+        const h = Math.floor(distance / (1000 * 60 * 60));
         const m = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
         const s = Math.floor((distance % (1000 * 60)) / 1000);
         setTimeLeft(`${h}h ${m}m ${s}s`);
       }
     }, 1000);
+
     return () => clearInterval(timer);
   }, []);
 
   return (
     <div style={{
       width: '100%',
-      backgroundColor: isEligible ? '#FFD700' : '#fdf5e6',
+      // Gold background if active, cream if not
+      backgroundColor: isEligible ? '#FFD700' : '#fdf5e6', 
       borderBottom: '1px solid #e0e0e0',
-      padding: '8px 0',
-      textAlign: 'center'
+      padding: '5px 0', // Reduced padding for a slimmer, professional look
+      textAlign: 'center',
+      zIndex: 1100,
+      position: 'relative'
     }}>
-      <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '15px', padding: '0 20px' }}>
-        <span style={{ fontSize: '0.9rem', color: '#8B4513', fontWeight: '500' }}>
+      <div style={{ 
+        maxWidth: '1200px', 
+        margin: '0 auto', 
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        gap: '15px', 
+        padding: '0 20px' 
+      }}>
+        <span style={{ 
+          fontSize: '0.85rem', 
+          color: '#8B4513', 
+          fontWeight: '600',
+          letterSpacing: '0.3px' 
+        }}>
           {isEligible 
-            ? `🎁 Your 50% discount expires in: ${timeLeft}` 
+            ? `✨ Limited Time: Your 50% discount expires in ${timeLeft}!` 
             : "🎁 Exclusive Offer: Sign up now to claim your first-time 50% discount!"}
         </span>
+        
         <button 
           onClick={() => navigate(isEligible ? '/products' : '/register')} 
           style={{
-            padding: '5px 15px',
+            padding: '4px 12px',
             backgroundColor: '#8B4513',
             color: 'white',
             border: 'none',
-            borderRadius: '20px',
-            fontSize: '0.75rem',
+            borderRadius: '4px', // Squared off slightly for a modern feel
+            fontSize: '0.7rem',
             fontWeight: 'bold',
-            cursor: 'pointer'
+            cursor: 'pointer',
+            transition: 'background-color 0.3s ease'
           }}
+          onMouseOver={(e) => e.target.style.backgroundColor = '#A0522D'}
+          onMouseOut={(e) => e.target.style.backgroundColor = '#8B4513'}
         >
           {isEligible ? "SHOP NOW" : "GO TO SIGN UP"}
         </button>
