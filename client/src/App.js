@@ -10,17 +10,18 @@ import Footer from './components/Footer';
 import Register from './components/Register';
 import Login from './components/Log in'; 
 import Profile from './components/Profile';
-import PromoTicket from './components/PromoTicket';
-import FloatingBadge from './components/FloatingBadge';
 
 function App() {
   const [cartItems, setCartItems] = useState(() => {
+    // Standardizing key name to 'desiCart'
     const savedCart = localStorage.getItem('desiCart');
     return savedCart ? JSON.parse(savedCart) : [];
   });
 
   const [user, setUser] = useState(() => {
-    const savedUser = localStorage.getItem('desiUser');
+    // CRITICAL FIX: Ensure this key matches exactly what Login.js uses.
+    // We will use 'user' as the standard key.
+    const savedUser = localStorage.getItem('user');
     return savedUser ? JSON.parse(savedUser) : null;
   });
 
@@ -29,7 +30,8 @@ function App() {
   }, [cartItems]);
 
   useEffect(() => {
-    localStorage.setItem('desiUser', JSON.stringify(user));
+    // CRITICAL FIX: Save to 'user' key
+    localStorage.setItem('user', JSON.stringify(user));
   }, [user]);
 
   const addToCart = (product) => {
@@ -59,12 +61,20 @@ function App() {
     localStorage.removeItem('desiCart');
   };
 
-  const loginUser = (userData) => setUser(userData);
+  const loginUser = (userData) => {
+    setUser(userData);
+    // State update triggers the useEffect above to save to localStorage
+  };
   
   const logoutUser = () => {
     setUser(null);
-    localStorage.removeItem('desiUser');
+    localStorage.removeItem('user');
+    localStorage.removeItem('token');
   };
+
+  // Logic to show Promo elements
+  // Show if NO user is logged in OR if user is logged in and isFirstOrder is true
+  const showNewUserOffer = !user || user.isFirstOrder === true;
 
   return (
     <Router>
@@ -75,31 +85,34 @@ function App() {
         fontFamily: "'Poppins', sans-serif" 
       }}>
         
-        {/* FIXED HEADER SECTION: Locks both Banner and Navbar */}
         <header style={{ 
           position: 'sticky', 
           top: 0, 
           zIndex: 2000, 
           width: '100%',
-          backgroundColor: '#fff' // Ensures content doesn't show through during scroll
+          backgroundColor: '#fff' 
         }}>
-          {!user && <PromoTicket />}
+          {/* Now correctly reacts to the 'user' state */}
+          {showNewUserOffer && (
+            <div style={{ backgroundColor: '#FFD700', color: '#8B4513', textAlign: 'center', padding: '8px', fontWeight: 'bold', fontSize: '0.9rem' }}>
+              🎁 50% OFF your first order! Use Code: DESI50
+            </div>
+          )}
+          
           <Navbar 
             user={user} 
             onLogout={logoutUser} 
             cartCount={cartItems.reduce((acc, item) => acc + item.quantity, 0)} 
           />
         </header>
-        
-        {/* Floating Badge for logged-in users */}
-        {user && <FloatingBadge />}
 
         <div style={{ flex: 1 }}>
           <Routes>
-            <Route path="/" element={<Home />} />
+            {/* Pass 'user' to Home so it can react to login status */}
+            <Route path="/" element={<Home user={user} />} />
             <Route path="/products" element={<Products addToCart={addToCart} />} />
             <Route path="/cart" element={<Cart cartItems={cartItems} updateQuantity={updateQuantity} />} />
-            <Route path="/checkout" element={<Checkout cartItems={cartItems} clearCart={clearCart} />} />
+            <Route path="/checkout" element={<Checkout cartItems={cartItems} clearCart={clearCart} user={user} setUser={setUser} />} />
             <Route path="/order-success" element={<OrderSuccess />} />
             <Route path="/register" element={<Register />} />
             <Route path="/login" element={<Login onLogin={loginUser} />} />

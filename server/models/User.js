@@ -9,13 +9,18 @@ const UserSchema = new mongoose.Schema({
     email: {
         type: String,
         required: true,
-        unique: true, // Prevents two people from using the same email
+        unique: true,
         lowercase: true,
         trim: true
     },
     password: {
         type: String,
         required: true
+    },
+    // --- ADDED THIS LINE ---
+    isFirstOrder: {
+        type: Boolean,
+        default: true // Every new user starts as "true"
     },
     date: {
         type: Date,

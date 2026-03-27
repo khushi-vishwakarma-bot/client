@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
-function Checkout({ cartItems, clearCart }) {
+// Receive 'user' and 'setUser' as props from App.js
+function Checkout({ cartItems, clearCart, user, setUser }) {
   const navigate = useNavigate();
   const [step, setStep] = useState(1); 
   const [formData, setFormData] = useState({
@@ -9,14 +11,13 @@ function Checkout({ cartItems, clearCart }) {
     phone: '',
     address: '',
     city: '',
-    paymentMethod: 'UPI'
+    paymentMethod: 'UPI (PhonePe/GPay)'
   });
 
   const [coupon, setCoupon] = useState("");
   const [discount, setDiscount] = useState(0);
   const [applied, setApplied] = useState(false);
 
-  // Helper to safely convert price strings or numbers to integers
   const parsePrice = (price) => {
     if (typeof price === 'string') {
       return parseInt(price.replace(/[^\d]/g, '')) || 0;
@@ -24,7 +25,6 @@ function Checkout({ cartItems, clearCart }) {
     return price || 0;
   };
 
-  // 1. Financial Calculations
   const subtotal = cartItems.reduce((acc, item) => {
     return acc + (parsePrice(item.price) * item.quantity);
   }, 0);
@@ -32,31 +32,77 @@ function Checkout({ cartItems, clearCart }) {
   const tax = Math.round(subtotal * 0.05); 
   const shipping = subtotal > 500 ? 0 : 50;
 
-  // 2. Updated Coupon Logic for 50% OFF
+  // --- UPDATED COUPON LOGIC ---
   const handleApplyCoupon = () => {
     const code = coupon.toUpperCase().trim();
-    
+
+    // 1. Prevent guest users from using coupons
+    if (!user) {
+      alert("Please login first to apply coupon codes.");
+      navigate('/login');
+      return;
+    }
+
     if (code === "DESI50") {
-      const reduction = Math.round(subtotal * 0.50); // 50% Calculation
-      setDiscount(reduction);
-      setApplied(true);
-      alert("Success! DESI50 applied. You saved 50% on your order!");
+      // 2. Validate if user is actually eligible for DESI50
+      if (user.isFirstOrder === true) {
+        setDiscount(Math.round(subtotal * 0.50));
+        setApplied(true);
+        alert("🎉 First Order Discount Applied! 50% OFF.");
+      } else {
+        alert("Sorry, DESI50 is only for your very first order.");
+      }
     } else if (code === "DESI10") {
-      const reduction = Math.round(subtotal * 0.10); // 10% Calculation
-      setDiscount(reduction);
+      setDiscount(Math.round(subtotal * 0.10));
       setApplied(true);
-      alert("Coupon DESI10 applied! 10% discount added.");
+      alert("Coupon DESI10 applied!");
     } else {
-      alert("Invalid Coupon Code. Try using DESI50.");
+      alert("Invalid Coupon Code.");
     }
   };
 
   const finalTotal = subtotal + tax + shipping - discount;
 
-  const handleSubmitOrder = (e) => {
+  const handleSubmitOrder = async (e) => {
     e.preventDefault();
-    clearCart(); 
-    navigate('/order-success'); 
+
+    // Double check authentication before placing order
+    if (!user || !user.id) {
+        alert("Session expired. Please login again.");
+        navigate('/login');
+        return;
+    }
+
+    const orderData = {
+        userId: user.id,
+        items: cartItems.map(item => ({
+            name: item.name,
+            quantity: item.quantity,
+            price: parsePrice(item.price)
+        })),
+        totalAmount: finalTotal,
+        shippingAddress: `${formData.address}, ${formData.city}. Phone: ${formData.phone}`,
+        paymentMethod: formData.paymentMethod
+    };
+
+    try {
+        const res = await axios.post('http://localhost:5000/api/orders', orderData);
+        
+        if (res.data.success) {
+            // --- CRITICAL: Update global user state ---
+            // This flips isFirstOrder to false in the UI instantly
+            const updatedUser = { ...user, isFirstOrder: false };
+            localStorage.setItem('user', JSON.stringify(updatedUser));
+            if (setUser) setUser(updatedUser); 
+
+            alert("Order Placed Successfully!");
+            clearCart(); 
+            navigate('/order-success'); 
+        }
+    } catch (error) {
+        console.error("Order Error:", error);
+        alert(error.response?.data?.message || "Failed to place order. Try again.");
+    }
   };
 
   return (
@@ -84,10 +130,9 @@ function Checkout({ cartItems, clearCart }) {
             <div style={priceRow}><span>GST (5%):</span><span>₹{tax}</span></div>
             <div style={priceRow}><span>Shipping:</span><span>{shipping === 0 ? "FREE" : `₹${shipping}`}</span></div>
             
-            {/* 50% Discount Visuals */}
             {applied && (
               <div style={{ ...priceRow, color: '#27ae60', fontWeight: 'bold' }}>
-                <span>Discount (Applied):</span>
+                <span>Discount:</span>
                 <span>-₹{discount}</span>
               </div>
             )}
@@ -102,13 +147,13 @@ function Checkout({ cartItems, clearCart }) {
           {step === 1 ? (
             <div style={formSection}>
               <h3 style={cardTitle}>Shipping Information</h3>
-              <input style={inputField} placeholder="Full Name" onChange={(e) => setFormData({...formData, name: e.target.value})} />
-              <input style={inputField} placeholder="Phone Number" onChange={(e) => setFormData({...formData, phone: e.target.value})} />
-              <textarea style={{ ...inputField, height: '100px' }} placeholder="Detailed Address" onChange={(e) => setFormData({...formData, address: e.target.value})} />
-              <input style={inputField} placeholder="City" onChange={(e) => setFormData({...formData, city: e.target.value})} />
+              <input style={inputField} placeholder="Full Name" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} />
+              <input style={inputField} placeholder="Phone Number" value={formData.phone} onChange={(e) => setFormData({...formData, phone: e.target.value})} />
+              <textarea style={{ ...inputField, height: '100px' }} placeholder="Detailed Address" value={formData.address} onChange={(e) => setFormData({...formData, address: e.target.value})} />
+              <input style={inputField} placeholder="City" value={formData.city} onChange={(e) => setFormData({...formData, city: e.target.value})} />
               <button 
                 style={primaryBtn} 
-                onClick={() => formData.name && formData.address ? setStep(2) : alert("Please fill shipping details")}
+                onClick={() => (formData.name && formData.address && formData.phone) ? setStep(2) : alert("Please fill shipping details")}
               >
                 Proceed to Payment
               </button>
@@ -123,7 +168,7 @@ function Checkout({ cartItems, clearCart }) {
                       type="radio" 
                       name="payMode" 
                       value={mode} 
-                      defaultChecked={mode === 'UPI (PhonePe/GPay)'}
+                      checked={formData.paymentMethod === mode}
                       onChange={(e) => setFormData({...formData, paymentMethod: e.target.value})}
                     />
                     <span style={{ marginLeft: '10px' }}>{mode}</span>
@@ -131,7 +176,6 @@ function Checkout({ cartItems, clearCart }) {
                 ))}
               </div>
 
-              {/* Coupon Box updated for DESI50 */}
               <div style={couponBox}>
                 <input 
                   style={{ ...inputField, flex: 1, marginBottom: 0 }} 
@@ -156,7 +200,7 @@ function Checkout({ cartItems, clearCart }) {
   );
 }
 
-// Styles remain the same to maintain your layout
+// Styles
 const stepContainer = { display: 'flex', justifyContent: 'center', gap: '30px', marginBottom: '40px' };
 const stepItem = { padding: '10px 20px', fontWeight: 'bold', fontSize: '1.1rem' };
 const layoutWrapper = { display: 'flex', gap: '30px', maxWidth: '1100px', margin: '0 auto', flexWrap: 'wrap' };
