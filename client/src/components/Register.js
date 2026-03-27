@@ -1,105 +1,98 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom'; // Added useNavigate
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const Register = () => {
-  // Updated state names to match your backend expectations (fullName, email, password)
-  const [user, setUser] = useState({ fullName: '', email: '', password: '' });
-  const [message, setMessage] = useState('');
-  const navigate = useNavigate(); // Hook for redirection
+    const [formData, setFormData] = useState({
+        name: '',
+        email: '',
+        password: ''
+    });
+    
+    // Adding a loading state to prevent multiple clicks
+    const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
 
-  const palette = {
-    primaryOrange: '#e67e22',
-    deepBrown: '#3a2e23',
-    softCream: '#fdfcf0'
-  };
+    const { name, email, password } = formData;
 
-  const handleChange = (e) => {
-    setUser({ ...user, [e.target.name]: e.target.value });
-  };
+    // Updates the state as the user types
+    const onChange = e => setFormData({ ...formData, [e.target.name]: e.target.value });
 
-  const handleRegister = async (e) => {
-    e.preventDefault();
-    setMessage('');
+    const onSubmit = async e => {
+        e.preventDefault();
+        setLoading(true);
 
-    try {
-      // Connects to the backend port you established in the VS Code terminal
-      const response = await fetch('http://localhost:5000/api/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(user),
-      });
+        try {
+            // Updated to include basic headers for JSON communication
+            const config = {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            };
 
-      const data = await response.json();
+            const res = await axios.post('http://localhost:5000/api/register', formData, config);
+            
+            if (res.data.success) {
+                alert("Registration Successful! Welcome to DesiDelight.");
+                // Reset form
+                setFormData({ name: '', email: '', password: '' });
+                navigate('/login'); 
+            }
+        } catch (err) {
+            // Improved error handling to catch specific backend messages
+            const errorMessage = err.response?.data?.message || "Registration failed. Please try again.";
+            alert(errorMessage);
+        } finally {
+            setLoading(false);
+        }
+    };
 
-      if (response.ok) {
-        setMessage("Success! Redirecting to login...");
-        // Wait 2 seconds so the user can see the success message
-        setTimeout(() => {
-          navigate('/login');
-        }, 2000);
-      } else {
-        setMessage(data.message || "Registration failed. Try again.");
-      }
-    } catch (err) {
-      setMessage("Server error. Please check if your backend is running.");
-    }
-  };
-
-  const styles = {
-    container: { display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '80vh', padding: '20px', backgroundColor: palette.softCream },
-    card: { backgroundColor: 'white', padding: '40px', borderRadius: '15px', boxShadow: '0 8px 30px rgba(0,0,0,0.1)', width: '100%', maxWidth: '400px', textAlign: 'center' },
-    header: { fontSize: '2.4rem', fontWeight: '800', color: palette.deepBrown, marginBottom: '10px' },
-    form: { display: 'flex', flexDirection: 'column', gap: '15px' },
-    input: { padding: '12px 15px', borderRadius: '8px', border: '1px solid #ddd' },
-    button: { backgroundColor: palette.primaryOrange, color: 'white', border: 'none', padding: '15px', borderRadius: '8px', fontWeight: '600', cursor: 'pointer' },
-    linkRow: { marginTop: '20px' },
-    link: { color: palette.primaryOrange, textDecoration: 'none', fontWeight: '600' }
-  };
-
-  return (
-    <div style={styles.container}>
-      <div style={styles.card}>
-        <h2 style={styles.header}>DESI DELIGHT</h2>
-        {/* Added the onSubmit handler here */}
-        <form style={styles.form} onSubmit={handleRegister}>
-          <input 
-            name="fullName" 
-            placeholder="Full Name" 
-            onChange={handleChange} 
-            required 
-            style={styles.input} 
-          />
-          <input 
-            name="email" 
-            type="email" 
-            placeholder="Email" 
-            onChange={handleChange} 
-            required 
-            style={styles.input} 
-          />
-          <input 
-            name="password" 
-            type="password" 
-            placeholder="Password" 
-            onChange={handleChange} 
-            required 
-            style={styles.input} 
-          />
-          <button type="submit" style={styles.button}>Create Account</button>
-        </form>
-        
-        {message && (
-          <p style={{ color: palette.primaryOrange, marginTop: '10px', fontWeight: 'bold' }}>
-            {message}
-          </p>
-        )}
-
-        <div style={styles.linkRow}>
-          Already a member? <Link to="/login" style={styles.link}>Sign In</Link>
+    return (
+        <div className="auth-form-container">
+            <div className="auth-form">
+                <h2>Sign Up for DesiDelight</h2>
+                <form onSubmit={onSubmit}>
+                    <div className="form-group">
+                        <label>Full Name</label>
+                        <input 
+                            type="text" 
+                            name="name" 
+                            value={name} 
+                            onChange={onChange} 
+                            placeholder="Enter your name" 
+                            required 
+                        />
+                    </div>
+                    <div className="form-group">
+                        <label>Email Address</label>
+                        <input 
+                            type="email" 
+                            name="email" 
+                            value={email} 
+                            onChange={onChange} 
+                            placeholder="Enter your email" 
+                            required 
+                        />
+                    </div>
+                    <div className="form-group">
+                        <label>Password</label>
+                        <input 
+                            type="password" 
+                            name="password" 
+                            value={password} 
+                            onChange={onChange} 
+                            placeholder="Create a password" 
+                            required 
+                        />
+                    </div>
+                    <button type="submit" disabled={loading}>
+                        {loading ? "Registering..." : "Register"}
+                    </button>
+                </form>
+                <p>Already have an account? <span onClick={() => navigate('/login')} style={{cursor:'pointer', color:'orange'}}>Login here</span></p>
+            </div>
         </div>
-      </div>
-    </div>
-  );
+    );
 };
 
 export default Register;
