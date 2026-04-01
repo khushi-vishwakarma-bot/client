@@ -13,7 +13,7 @@ function Home({ user }) {
   // Timer Logic for the Top Promo Banner
   useEffect(() => {
     // Setting expiry to end of March 2026 as per your current project timeframe
-    const expiryDate = new Date("2026-03-31T23:59:59").getTime(); 
+    const expiryDate = new Date("2026-04-31T23:59:59").getTime(); 
     const timer = setInterval(() => {
       const now = new Date().getTime();
       const distance = expiryDate - now;
