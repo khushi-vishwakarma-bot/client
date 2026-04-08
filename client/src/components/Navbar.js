@@ -15,15 +15,20 @@ function Navbar({ cartCount, user, onLogout }) {
       width: '100%',
       boxSizing: 'border-box'
     }}>
+      
+      {/* --- BRAND NAME --- */}
       <div style={{ fontSize: '1.5rem', fontWeight: '800' }}>
-        <Link to="/" style={{ textDecoration: 'none', color: palette.deepBrown }}>
+        <Link to="/" style={{ textDecoration: 'none', color: palette.deepBrown, display: 'flex', alignItems: 'center', gap: '10px' }}>
           Desi Delight 🛍️
         </Link>
       </div>
 
+      {/* --- NAV LINKS --- */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '25px' }}>
         <Link to="/" style={navLinkStyle}>Home</Link>
         <Link to="/products" style={navLinkStyle}>Products</Link>
+        <Link to="/about" style={navLinkStyle}>About Us</Link>
+        <Link to="/contact" style={navLinkStyle}>Contact</Link>
         
         {user ? (
           <div style={profileWrapperStyle}>
@@ -46,7 +51,7 @@ function Navbar({ cartCount, user, onLogout }) {
 }
 
 // Sub-styles
-const navLinkStyle = { textDecoration: 'none', color: '#444', fontWeight: '600', fontSize: '0.95rem' };
+const navLinkStyle = { textDecoration: 'none', color: '#444', fontWeight: '600', fontSize: '0.95rem', transition: 'color 0.2s' };
 const authButtonStyle = { textDecoration: 'none', color: '#8B4513', fontWeight: '700', padding: '8px 22px', borderRadius: '25px', border: '2px solid #8B4513' };
 const profileWrapperStyle = { display: 'flex', alignItems: 'center', gap: '12px', backgroundColor: '#f9f9f9', padding: '5px 12px', borderRadius: '30px', border: '1px solid #eee' };
 const profileLinkStyle = { display: 'flex', alignItems: 'center', gap: '8px', textDecoration: 'none' };

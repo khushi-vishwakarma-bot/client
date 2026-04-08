@@ -1,19 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-// 1. Receive 'user' as a prop from App.js for real-time updates
 function Home({ user }) {
   const navigate = useNavigate();
   const [timeLeft, setTimeLeft] = useState("");
   
-  // 2. Logic uses the PROP instead of localStorage directly.
-  // This ensures the banner vanishes immediately after the first order is placed.
   const showOffer = !user || user.isFirstOrder === true;
 
-  // Timer Logic for the Top Promo Banner
   useEffect(() => {
-    // Setting expiry to end of March 2026 as per your current project timeframe
-    const expiryDate = new Date("2026-04-31T23:59:59").getTime(); 
+    const expiryDate = new Date("2026-04-30T23:59:59").getTime(); 
     const timer = setInterval(() => {
       const now = new Date().getTime();
       const distance = expiryDate - now;
@@ -156,83 +151,16 @@ function Home({ user }) {
         </div>
       </div>
 
-      {/* 4. TRUST FOOTER SECTION */}
-      <div style={{ background: '#482c18', padding: '30px 20px', color: 'white', textAlign: 'center' }}>
-        <div style={{ display: 'flex', justifyContent: 'center', gap: '40px', flexWrap: 'wrap', marginBottom: '15px' }}>
-          <div style={{ fontWeight: 'bold', fontSize: '1rem' }}>✅ FSSAI Approved</div>
-          <div style={{ fontWeight: 'bold', fontSize: '1rem' }}>💳 Secure Payment</div>
-          <div style={{ fontWeight: 'bold', fontSize: '1rem' }}>📦 Eco-friendly Packing</div>
-        </div>
-      </div>
     </div>
   );
 }
 
 // --- STYLES ---
-const bannerStyle = {
-  backgroundColor: '#3a2e23',
-  color: '#fdfcf0',
-  padding: '10px 20px',
-  textAlign: 'center',
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-  gap: '15px',
-  fontSize: '0.85rem',
-  borderBottom: '2px solid #FFD700',
-  flexWrap: 'wrap',
-  zIndex: 10
-};
-
-const codeBadge = {
-  backgroundColor: '#FFD700',
-  color: '#3a2e23',
-  padding: '2px 8px',
-  borderRadius: '4px',
-  fontWeight: 'bold',
-  marginLeft: '5px'
-};
-
-const timerStyle = {
-  backgroundColor: 'rgba(230, 126, 34, 0.15)',
-  padding: '3px 10px',
-  borderRadius: '20px',
-  color: '#FFD700',
-  fontWeight: 'bold',
-  border: '1px solid #FFD700'
-};
-
-const bannerBtn = {
-  backgroundColor: '#e67e22',
-  color: 'white',
-  border: 'none',
-  padding: '4px 12px',
-  borderRadius: '4px',
-  cursor: 'pointer',
-  fontWeight: 'bold',
-  fontSize: '0.75rem'
-};
-
-const fabStyle = {
-  position: 'fixed',
-  bottom: '40px',
-  right: '30px',
-  width: '80px',
-  height: '80px',
-  backgroundColor: '#FFD700',
-  color: '#8B4513',
-  borderRadius: '50%',
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  justifyContent: 'center',
-  boxShadow: '0 8px 25px rgba(0,0,0,0.3)',
-  zIndex: 1000,
-  cursor: 'pointer',
-  border: '4px solid white',
-  transition: 'all 0.3s ease'
-};
-
+const bannerStyle = { backgroundColor: '#3a2e23', color: '#fdfcf0', padding: '10px 20px', textAlign: 'center', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '15px', fontSize: '0.85rem', borderBottom: '2px solid #FFD700', flexWrap: 'wrap', zIndex: 10 };
+const codeBadge = { backgroundColor: '#FFD700', color: '#3a2e23', padding: '2px 8px', borderRadius: '4px', fontWeight: 'bold', marginLeft: '5px' };
+const timerStyle = { backgroundColor: 'rgba(230, 126, 34, 0.15)', padding: '3px 10px', borderRadius: '20px', color: '#FFD700', fontWeight: 'bold', border: '1px solid #FFD700' };
+const bannerBtn = { backgroundColor: '#e67e22', color: 'white', border: 'none', padding: '4px 12px', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold', fontSize: '0.75rem' };
+const fabStyle = { position: 'fixed', bottom: '40px', right: '30px', width: '80px', height: '80px', backgroundColor: '#FFD700', color: '#8B4513', borderRadius: '50%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', boxShadow: '0 8px 25px rgba(0,0,0,0.3)', zIndex: 1000, cursor: 'pointer', border: '4px solid white', transition: 'all 0.3s ease' };
 const flexContainerStyle = { display: 'flex', justifyContent: 'center', gap: '30px', flexWrap: 'wrap', maxWidth: '1400px', margin: '0 auto' };
 const ctaButtonStyle = { padding: '18px 50px', fontSize: '1.2rem', backgroundColor: '#FFD700', color: '#8B4513', border: 'none', borderRadius: '50px', fontWeight: '900', cursor: 'pointer', boxShadow: '0 10px 20px rgba(0,0,0,0.3)', transition: 'all 0.3s ease' };
 const premiumCardStyle = { backgroundColor: '#ffffff', padding: '40px 30px', borderRadius: '20px', width: '300px', boxShadow: '0 10px 30px rgba(0,0,0,0.05)', border: '1px solid #eee' };

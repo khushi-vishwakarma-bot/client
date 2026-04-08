@@ -11,6 +11,7 @@ dns.setServers(['8.8.8.8', '8.8.4.4']);
 // Models
 const User = require('./models/User'); 
 const Order = require('./models/Order'); 
+const Contact = require('./models/Contact'); // <--- 1. Import Contact Model
 
 const app = express();
 
@@ -25,7 +26,7 @@ mongoose.connect(process.env.MONGO_URI)
 
 // --- AUTH ROUTES ---
 
-// Login Route - Updated to send 'isFirstOrder' status
+// Login Route
 app.post('/api/login', async (req, res) => {
     try {
         const { email, password } = req.body;
@@ -42,14 +43,13 @@ app.post('/api/login', async (req, res) => {
             { expiresIn: '1h' }
         );
 
-        // We now include isFirstOrder so React knows whether to show the yellow buttons
         res.status(200).json({
             token,
             user: { 
                 id: user._id, 
                 name: user.name, 
                 email: user.email,
-                isFirstOrder: user.isFirstOrder // <--- Added this
+                isFirstOrder: user.isFirstOrder 
             }
         });
     } catch (error) {
@@ -72,7 +72,6 @@ app.post('/api/register', async (req, res) => {
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
-        // New users default to isFirstOrder: true via the Schema
         const newUser = new User({ name, email, password: hashedPassword });
         await newUser.save();
         
@@ -85,7 +84,6 @@ app.post('/api/register', async (req, res) => {
 
 // --- ORDER ROUTES ---
 
-// Create New Order - Updated to block coupon abuse and update user status
 app.post('/api/orders', async (req, res) => {
     try {
         const { userId, items, totalAmount, shippingAddress, couponCode } = req.body;
@@ -94,7 +92,6 @@ app.post('/api/orders', async (req, res) => {
             return res.status(400).json({ message: "Cart is empty" });
         }
 
-        // 1. Check if user is actually eligible for DESI50
         if (couponCode === "DESI50") {
             const user = await User.findById(userId);
             if (!user || !user.isFirstOrder) {
@@ -112,20 +109,46 @@ app.post('/api/orders', async (req, res) => {
         });
 
         await newOrder.save();
-
-        // 2. IMPORTANT: After the first order is saved, update the user's status
-        // This ensures the yellow buttons disappear on the next login/refresh
         await User.findByIdAndUpdate(userId, { isFirstOrder: false });
 
         res.status(201).json({ 
             success: true, 
             message: "Order placed successfully!", 
             order: newOrder,
-            isFirstOrder: false // Send back the new status
+            isFirstOrder: false 
         });
     } catch (error) {
         console.error("Order Error:", error);
         res.status(500).json({ message: "Failed to place order", error: error.message });
+    }
+});
+
+// --- CONTACT ROUTE ---
+
+// 2. Add this route to handle Contact Form Submissions
+app.post('/api/contact', async (req, res) => {
+    try {
+        const { name, email, message } = req.body;
+
+        if (!name || !email || !message) {
+            return res.status(400).json({ message: "Please provide all required fields." });
+        }
+
+        const newContact = new Contact({
+            name,
+            email,
+            message
+        });
+
+        await newContact.save();
+
+        res.status(201).json({ 
+            success: true, 
+            message: "Thank you for reaching out! Your message has been saved." 
+        });
+    } catch (error) {
+        console.error("Contact Error:", error);
+        res.status(500).json({ message: "Failed to save message", error: error.message });
     }
 });
 

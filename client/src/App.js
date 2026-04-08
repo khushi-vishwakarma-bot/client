@@ -10,17 +10,16 @@ import Footer from './components/Footer';
 import Register from './components/Register';
 import Login from './components/Log in'; 
 import Profile from './components/Profile';
+import About from './components/About'; // Imported About Page
+import Contact from './components/Contact'; // Imported Contact Page
 
 function App() {
   const [cartItems, setCartItems] = useState(() => {
-    // Standardizing key name to 'desiCart'
     const savedCart = localStorage.getItem('desiCart');
     return savedCart ? JSON.parse(savedCart) : [];
   });
 
   const [user, setUser] = useState(() => {
-    // CRITICAL FIX: Ensure this key matches exactly what Login.js uses.
-    // We will use 'user' as the standard key.
     const savedUser = localStorage.getItem('user');
     return savedUser ? JSON.parse(savedUser) : null;
   });
@@ -30,7 +29,6 @@ function App() {
   }, [cartItems]);
 
   useEffect(() => {
-    // CRITICAL FIX: Save to 'user' key
     localStorage.setItem('user', JSON.stringify(user));
   }, [user]);
 
@@ -63,7 +61,6 @@ function App() {
 
   const loginUser = (userData) => {
     setUser(userData);
-    // State update triggers the useEffect above to save to localStorage
   };
   
   const logoutUser = () => {
@@ -71,10 +68,6 @@ function App() {
     localStorage.removeItem('user');
     localStorage.removeItem('token');
   };
-
-  // Logic to show Promo elements
-  // Show if NO user is logged in OR if user is logged in and isFirstOrder is true
-  const showNewUserOffer = !user || user.isFirstOrder === true;
 
   return (
     <Router>
@@ -90,15 +83,9 @@ function App() {
           top: 0, 
           zIndex: 2000, 
           width: '100%',
-          backgroundColor: '#fff' 
+          backgroundColor: '#fff',
+          boxShadow: '0 2px 10px rgba(0,0,0,0.1)' 
         }}>
-          {/* Now correctly reacts to the 'user' state */}
-          {showNewUserOffer && (
-            <div style={{ backgroundColor: '#FFD700', color: '#8B4513', textAlign: 'center', padding: '8px', fontWeight: 'bold', fontSize: '0.9rem' }}>
-              🎁 50% OFF your first order! Use Code: DESI50
-            </div>
-          )}
-          
           <Navbar 
             user={user} 
             onLogout={logoutUser} 
@@ -108,7 +95,6 @@ function App() {
 
         <div style={{ flex: 1 }}>
           <Routes>
-            {/* Pass 'user' to Home so it can react to login status */}
             <Route path="/" element={<Home user={user} />} />
             <Route path="/products" element={<Products addToCart={addToCart} />} />
             <Route path="/cart" element={<Cart cartItems={cartItems} updateQuantity={updateQuantity} />} />
@@ -117,6 +103,9 @@ function App() {
             <Route path="/register" element={<Register />} />
             <Route path="/login" element={<Login onLogin={loginUser} />} />
             <Route path="/profile" element={<Profile user={user} onLogout={logoutUser} />} />
+            {/* --- NEW ROUTES ADDED --- */}
+            <Route path="/about" element={<About />} />
+            <Route path="/contact" element={<Contact />} />
           </Routes>
         </div>
 
